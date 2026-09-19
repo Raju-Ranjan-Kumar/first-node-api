@@ -1,0 +1,255 @@
+{
+  "info": {
+    "name": "First Node API",
+    "_postman_id": "b6f2e7f0-1a1a-4a2a-9c3a-first-node-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080/api" },
+    { "key": "email", "value": "raju.test@example.com" },
+    { "key": "password", "value": "Passw0rd!" },
+    { "key": "accessToken", "value": "" },
+    { "key": "userId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Raju Ranjan\",\n  \"email\": \"{{email}}\",\n  \"city\": \"Delhi\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/signup", "host": ["{{baseUrl}}"], "path": ["auth", "signup"] }
+          }
+        },
+        {
+          "name": "Verify Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.accessToken) {",
+                  "    pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "}",
+                  "if (json && json.data && json.data.user && json.data.user._id) {",
+                  "    pm.collectionVariables.set('userId', json.data.user._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"REPLACE_WITH_OTP_FROM_SERVER_CONSOLE\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/verify-email", "host": ["{{baseUrl}}"], "path": ["auth", "verify-email"] }
+          }
+        },
+        {
+          "name": "Resend OTP",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"purpose\": \"verify_email\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/resend-otp", "host": ["{{baseUrl}}"], "path": ["auth", "resend-otp"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.accessToken) {",
+                  "    pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "}",
+                  "if (json && json.data && json.data.user && json.data.user._id) {",
+                  "    pm.collectionVariables.set('userId', json.data.user._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/forgot-password", "host": ["{{baseUrl}}"], "path": ["auth", "forgot-password"] }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"otp\": \"REPLACE_WITH_OTP_FROM_SERVER_CONSOLE\",\n  \"newPassword\": \"NewPassw0rd!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/reset-password", "host": ["{{baseUrl}}"], "path": ["auth", "reset-password"] }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.data && json.data.accessToken) {",
+                  "    pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [],
+            "body": { "mode": "raw", "raw": "" },
+            "url": { "raw": "{{baseUrl}}/auth/refresh-token", "host": ["{{baseUrl}}"], "path": ["auth", "refresh-token"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [],
+            "body": { "mode": "raw", "raw": "" },
+            "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"{{password}}\",\n  \"newPassword\": \"NewPassw0rd!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/change-password", "host": ["{{baseUrl}}"], "path": ["auth", "change-password"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/users/me", "host": ["{{baseUrl}}"], "path": ["users", "me"] }
+          }
+        },
+        {
+          "name": "Get All Users (admin)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/users?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User By Id",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Update User (JSON)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"city\": \"Mumbai\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Update User (with avatar)",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Updated Name", "type": "text" },
+                { "key": "city", "value": "Mumbai", "type": "text" },
+                { "key": "avatar", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Get User Count (admin)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/users/count", "host": ["{{baseUrl}}"], "path": ["users", "count"] }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["users", "{{userId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}

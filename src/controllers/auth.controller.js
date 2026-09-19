@@ -224,6 +224,26 @@ const logout = asyncHandler(async (req, res) => {
     return sendSuccess(res, { message: "Logged out successfully" });
 });
 
+// POST /api/auth/change-password
+const changePassword = asyncHandler(async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user._id).select("+password");
+
+    if (!(await user.comparePassword(currentPassword))) {
+        throw new ApiError(401, "Current password is incorrect");
+    }
+
+    user.password = newPassword;
+    await user.setRefreshToken(null);
+    await user.save();
+
+    res.clearCookie(REFRESH_COOKIE_NAME, { path: "/api/auth" });
+    return sendSuccess(res, {
+        message: "Password changed successfully. Please log in again.",
+    });
+});
+
 module.exports = {
     signup,
     verifyEmail,
@@ -233,4 +253,5 @@ module.exports = {
     resetPassword,
     refreshToken,
     logout,
+    changePassword,
 };

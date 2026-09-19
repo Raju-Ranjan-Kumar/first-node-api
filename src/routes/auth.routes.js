@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authController = require("../controllers/auth.controller");
 const validate = require("../middlewares/validate.middleware");
+const { authenticate } = require("../middlewares/auth.middleware");
 const { authLimiter, otpLimiter } = require("../middlewares/rateLimiter.middleware");
 const {
     signupValidator,
@@ -10,6 +11,7 @@ const {
     otpValidator,
     emailOnlyValidator,
     resetPasswordValidator,
+    changePasswordValidator,
 } = require("../validators/auth.validator");
 
 router.post("/signup", authLimiter, signupValidator, validate, authController.signup);
@@ -32,5 +34,13 @@ router.post(
 );
 router.post("/refresh-token", authController.refreshToken);
 router.post("/logout", authController.logout);
+router.post(
+    "/change-password",
+    authenticate,
+    authLimiter,
+    changePasswordValidator,
+    validate,
+    authController.changePassword
+);
 
 module.exports = router;

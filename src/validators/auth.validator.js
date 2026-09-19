@@ -47,10 +47,27 @@ const resetPasswordValidator = [
         .withMessage("Password must contain a number"),
 ];
 
+const changePasswordValidator = [
+    body("currentPassword").notEmpty().withMessage("Current password is required"),
+    body("newPassword")
+        .isString()
+        .isLength({ min: 8 })
+        .withMessage("Password must be at least 8 characters long")
+        .matches(/[a-z]/)
+        .withMessage("Password must contain a lowercase letter")
+        .matches(/[A-Z]/)
+        .withMessage("Password must contain an uppercase letter")
+        .matches(/\d/)
+        .withMessage("Password must contain a number")
+        .custom((value, { req }) => value !== req.body.currentPassword)
+        .withMessage("New password must be different from the current password"),
+];
+
 module.exports = {
     signupValidator,
     loginValidator,
     otpValidator,
     emailOnlyValidator,
     resetPasswordValidator,
+    changePasswordValidator,
 };
